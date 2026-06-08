@@ -39,6 +39,17 @@ kafka_cluster_id: MkU3OEVBNTcwNTJENDM2Qk # CHANGE THIS!
 telegram_bot_token: ''
 self_monitoring_dsn: https://FIXME@api.uptrace.dev?grpc=4317
 
+# SMTP email. Set smtp_enabled: true and fill these in to enable alert
+# notifications, password resets, and user invitations. Port 587 uses STARTTLS.
+# The `from` address must be a verified sender in your SMTP provider.
+# Keep the real password only in the gitignored group_vars/all.yml.
+smtp_enabled: false
+smtp_host: smtp.example.com
+smtp_port: 587
+smtp_username: ''
+smtp_password: FIXME
+smtp_from: no-reply@example.com
+
 seed_data:
   update: true # Whether to update existing resources by key
   delete: true # Whether to delete disappeared resources by key

@@ -15,6 +15,15 @@ certmagic_enabled: false
 certmagic_staging_ca: false
 telegram_bot_token: ''
 
+# SMTP / email notifications (alerting, password resets, invitations).
+# Disabled by default; override smtp_enabled and the values below in group_vars.
+smtp_enabled: false
+smtp_host: localhost
+smtp_port: 1025
+smtp_username: ''
+smtp_password: ''
+smtp_from: no-reply@uptrace.local
+
 seed_data: {}
 
 redis_db: 0

@@ -1,2 +1,13 @@
 inventory.yml
 group_vars/all.yml
+
+# Devenv
+.devenv*
+devenv.local.nix
+devenv.local.yaml
+
+# direnv
+.direnv
+
+# pre-commit
+.pre-commit-config.yaml

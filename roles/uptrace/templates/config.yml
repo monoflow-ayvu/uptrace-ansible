@@ -263,15 +263,15 @@ certmagic:
 # Documentation: https://uptrace.dev/features/alerting
 mailer:
   smtp:
-    enabled: false                # Enable email notifications
-    host: localhost               # SMTP server hostname
-    port: 1025                    # SMTP server port (25, 465, 587, 1025)
-    username: mailhog             # SMTP authentication username
-    password: mailhog             # SMTP authentication password
-    from: no-reply@uptrace.local  # Sender email address (must be authorized)
+    enabled: {{ smtp_enabled }}     # Enable email notifications
+    host: {{ smtp_host }}           # SMTP server hostname
+    port: {{ smtp_port }}           # SMTP server port (25, 465, 587, 1025)
+    username: {{ smtp_username }}   # SMTP authentication username
+    password: {{ smtp_password }}   # SMTP authentication password
+    from: {{ smtp_from }}           # Sender email address (must be authorized)
 
     # TLS configuration
-    # Most production SMTP servers require TLS
+    # Port 587 uses opportunistic TLS (STARTTLS), enabled by default.
     #tls: { disabled: true }     # Uncomment to disable opportunistic TLS
 
 # -----------------------------------------------------------------------------
