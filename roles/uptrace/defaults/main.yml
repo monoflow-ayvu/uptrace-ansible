@@ -18,5 +18,9 @@ telegram_bot_token: ''
 seed_data: {}
 
 redis_db: 0
-ch_port: 9440
+# ClickHouse native protocol port. The clickhouse-server role serves the plain
+# port (9000) and does not enable the TLS-secured port (9440), so connect plainly.
+# To use 9440, enable tcp_port_secure + certs in the clickhouse-server role and
+# set ch_tls accordingly.
+ch_port: 9000
 ch_tls: null

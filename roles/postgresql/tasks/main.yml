@@ -28,6 +28,30 @@
   tags: [config]
   notify: Restart PostgreSQL
 
+# pg_hba.conf needs literal IP/CIDR addresses; a bare hostname with a "/32"
+# mask is rejected by PostgreSQL ("specifying both host name and CIDR mask is
+# invalid"). Resolve every client host (which may be an IP or a DNS name) to its
+# real addresses so the template can emit a valid /32 (IPv4) or /128 (IPv6) rule.
+- name: Resolve pg_hba client hosts to IP addresses
+  getent:
+    database: ahosts
+    key: '{{ item }}'
+    fail_key: no
+  loop: "{{ ((groups['postgresql'] | default([])) + (groups['uptrace'] | default([])) + [inventory_hostname]) | unique }}"
+  loop_control:
+    label: '{{ item }}'
+  register: pg_hba_getent
+  changed_when: false
+  tags: [config]
+
+- name: Build pg_hba address map
+  set_fact:
+    pg_hba_addrs: "{{ pg_hba_addrs | default({}) | combine({ item.item: (item.ansible_facts.getent_ahosts | default({})).keys() | list }) }}"
+  loop: '{{ pg_hba_getent.results }}'
+  loop_control:
+    label: '{{ item.item }}'
+  tags: [config]
+
 - name: upload pg_hba.conf
   template:
     src: pg_hba.conf

@@ -67,7 +67,10 @@ processors:
 
 exporters:
   otlp:
-    endpoint: https://otlp.uptrace.dev:4317
+    # Send host/infra metrics to the local Uptrace instance (gRPC over TLS on
+    # :4317). The uptrace-dsn header carries the project token; endpoint must
+    # match its host. Point both at otlp.uptrace.dev to use Uptrace Cloud instead.
+    endpoint: https://{{ groups['uptrace'][0] }}:4317
     headers:
       {
         "uptrace-dsn": "{{ uptrace_dsn }}",
