@@ -12,6 +12,9 @@
     owner: root
     group: root
     mode: 0644
+  notify:
+    - Reload systemd
+    - Restart PgBouncer
 
 - name: Upload PgBouncer config
   template: src={{ item }} dest=/etc/pgbouncer/ owner=postgres group=postgres mode=0640

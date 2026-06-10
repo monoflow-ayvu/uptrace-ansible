@@ -1,4 +1,19 @@
 ---
+- name: Create systemd drop-in directory
+  file:
+    path: /etc/systemd/system/redis-server.service.d
+    state: directory
+    mode: 0755
+
+- name: Upload systemd drop-in
+  copy:
+    src: systemd-override.conf
+    dest: /etc/systemd/system/redis-server.service.d/override.conf
+    mode: 0644
+  notify:
+    - Reload systemd
+    - Restart Redis
+
 - name: Upload Redis config
   template:
     src: redis7.conf

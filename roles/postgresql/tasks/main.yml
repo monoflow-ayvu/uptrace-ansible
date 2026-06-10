@@ -18,20 +18,12 @@
 - name: start PostgreSQL
   service: name=postgresql state=started enabled=yes
 
-- name: upload postgresql.conf
-  template:
-    src: '{{ pg_version }}/postgresql.conf'
-    dest: /etc/postgresql/{{ pg_version }}/main/
-    mode: 0640
-    owner: postgres
-    group: postgres
-  tags: [config]
-  notify: Restart PostgreSQL
-
 # pg_hba.conf needs literal IP/CIDR addresses; a bare hostname with a "/32"
 # mask is rejected by PostgreSQL ("specifying both host name and CIDR mask is
 # invalid"). Resolve every client host (which may be an IP or a DNS name) to its
 # real addresses so the template can emit a valid /32 (IPv4) or /128 (IPv6) rule.
+# postgresql.conf and pgbouncer.ini also use this map for their listen
+# addresses, so PostgreSQL/PgBouncer startup never depends on DNS.
 - name: Resolve pg_hba client hosts to IP addresses
   getent:
     database: ahosts
@@ -51,6 +43,16 @@
   loop_control:
     label: '{{ item.item }}'
   tags: [config]
+
+- name: upload postgresql.conf
+  template:
+    src: '{{ pg_version }}/postgresql.conf'
+    dest: /etc/postgresql/{{ pg_version }}/main/
+    mode: 0640
+    owner: postgres
+    group: postgres
+  tags: [config]
+  notify: Restart PostgreSQL
 
 - name: upload pg_hba.conf
   template:

@@ -1,7 +1,11 @@
 [Unit]
 Description = connection pooler for PostgreSQL
 
-After = network.target
+After = network-online.target
+Wants = network-online.target
+# Default start-rate limiting (5 failures in 10s) leaves PgBouncer permanently
+# down after a transient failure; keep retrying forever instead.
+StartLimitIntervalSec = 0
 #Requires=pgbouncer.socket
 
 [Service]
@@ -12,7 +16,7 @@ ExecStart  = /usr/sbin/pgbouncer /etc/pgbouncer/pgbouncer.ini
 ExecReload = /bin/kill -HUP $MAINPID
 KillSignal = SIGINT
 Restart    = always
-RestartSec = 1s
+RestartSec = 5s
 
 LimitNOFILE = 1024
 
