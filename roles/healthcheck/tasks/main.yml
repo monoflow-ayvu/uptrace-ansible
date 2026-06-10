@@ -1,0 +1,23 @@
+---
+- name: Upload healthcheck script
+  template:
+    src: healthcheck.py
+    dest: /usr/local/bin/uptrace-healthcheck
+    mode: 0755
+  notify: Restart healthcheck
+  tags: [config]
+
+- name: Upload healthcheck service
+  template:
+    src: uptrace-healthcheck.service
+    dest: /etc/systemd/system/uptrace-healthcheck.service
+    mode: 0644
+  register: healthcheck_unit
+  notify: Restart healthcheck
+
+- name: Enable and start healthcheck
+  systemd:
+    name: uptrace-healthcheck
+    state: started
+    enabled: yes
+    daemon_reload: '{{ healthcheck_unit is changed }}'

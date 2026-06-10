@@ -1,0 +1,6 @@
+---
+- name: Restart healthcheck
+  systemd:
+    name: uptrace-healthcheck
+    state: restarted
+    daemon_reload: yes

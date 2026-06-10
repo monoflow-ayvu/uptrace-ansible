@@ -1,0 +1,3 @@
+healthcheck_port: 8060
+# Override to check a fixed list of units instead of deriving from group
+# membership, e.g. healthcheck_units: [uptrace, redis-server]

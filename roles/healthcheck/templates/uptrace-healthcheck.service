@@ -1,0 +1,16 @@
+[Unit]
+Description=Health endpoint for external uptime monitoring
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/bin/uptrace-healthcheck
+DynamicUser=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
