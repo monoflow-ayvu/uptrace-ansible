@@ -1,0 +1,36 @@
+- name: install ufw
+  apt:
+    name: ufw
+    state: present
+    update_cache: yes
+
+- name: deny all incoming by default
+  ufw:
+    direction: incoming
+    policy: deny
+
+- name: allow all outgoing by default
+  ufw:
+    direction: outgoing
+    policy: allow
+
+# Cluster peers (and any admin networks) get full access. Empty by default.
+- name: allow trusted source networks on all ports
+  ufw:
+    rule: allow
+    src: "{{ item }}"
+  loop: "{{ firewall_trusted_sources }}"
+
+# SSH is in this list, so it is allowed before the firewall is enabled below —
+# no lock-out. Self-connections to the host's own routable IP route over lo,
+# which ufw always accepts, so Uptrace can still reach Redis/PG/ClickHouse.
+- name: allow public TCP ports
+  ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop: "{{ firewall_public_tcp_ports }}"
+
+- name: enable ufw
+  ufw:
+    state: enabled

@@ -1,0 +1,18 @@
+# Public-facing TCP ports — the ONLY ports reachable from the internet.
+# Everything else (Redis 6379, Postgres 5432, pgbouncer 6543, ClickHouse
+# 8123/9000/9004/9005/9009, otelcol 8888, ...) is denied from outside and is
+# reachable only via localhost or the trusted sources below. Services still
+# bind to the routable IP (needed for multi-node), the firewall is what keeps
+# them off the public internet.
+firewall_public_tcp_ports:
+  - 22     # SSH
+  - 80     # HTTP — ACME http-01 challenge + redirect to 443
+  - 443    # Uptrace UI + OTLP/HTTP(S) ingest
+  - 4317   # OTLP/gRPC ingest
+  - 8060   # external uptime healthcheck (roles/healthcheck)
+
+# CIDRs/IPs trusted on ALL ports. For a multi-node deploy, add the other
+# cluster members' IPs here (Postgres standbys, ClickHouse replicas/keepers,
+# a separate Redis host) so they can reach the internal DB/cache ports that
+# stay closed to the public. Empty = single-node, nothing extra is opened.
+firewall_trusted_sources: []

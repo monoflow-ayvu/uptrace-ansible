@@ -3,5 +3,3 @@
 
   roles:
     - firewall
-    - bootstrap
-    - otelcol
